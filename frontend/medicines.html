@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MediFlow SaaS | Medicines</title>
+
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+  <link rel="stylesheet" href="assets/css/medicines.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">+</div>
+        <div>
+          <h2>MediFlow</h2>
+          <p>Pharmacy SaaS</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a class="nav-link" href="index.html"><span>📊</span>Dashboard</a>
+        <a class="nav-link active" href="medicines.html"><span>💊</span>Medicines</a>
+        <a class="nav-link" href="inventory.html"><span>📦</span>Inventory</a>
+        <a class="nav-link" href="sales.html"><span>🧾</span>Sales / POS</a>
+        <a class="nav-link" href="patients.html"><span>👥</span>Patients</a>
+      </nav>
+
+      <div class="sidebar-card">
+        <p>Current Plan</p>
+        <h3>Pro Pharmacy</h3>
+        <span>14 days trial left</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Medicine Control Center</p>
+          <h1>Medicines</h1>
+          <p class="muted">Manage medicine records, stock status, batches, categories, and expiry risk.</p>
+        </div>
+
+        <div class="top-actions">
+          <div class="search-box">
+            <span>🔍</span>
+            <input id="medicineSearch" type="text" placeholder="Search medicine..." />
+          </div>
+
+          <button class="ghost-btn">Import CSV</button>
+          <button class="primary-btn" id="openAddMedicine">+ Add Medicine</button>
+        </div>
+      </header>
+
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <p>Total Medicines</p>
+            <span class="pill blue">Live</span>
+          </div>
+          <h2 id="totalMedicines">0</h2>
+          <p class="muted">Available in catalog</p>
+        </div>
+
+        <div class="kpi-card warning">
+          <div class="kpi-top">
+            <p>Low Stock</p>
+            <span class="pill orange">Alert</span>
+          </div>
+          <h2 id="lowStockCount">0</h2>
+          <p class="muted">Below reorder level</p>
+        </div>
+
+        <div class="kpi-card danger">
+          <div class="kpi-top">
+            <p>Expiring Soon</p>
+            <span class="pill red">Risk</span>
+          </div>
+          <h2 id="expiringCount">0</h2>
+          <p class="muted">Within 45 days</p>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <p>Categories</p>
+            <span class="pill green">Active</span>
+          </div>
+          <h2 id="categoryCount">0</h2>
+          <p class="muted">Medicine groups</p>
+        </div>
+      </section>
+
+      <section class="panel medicine-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Medicine Inventory</h3>
+            <p class="muted">Search, filter, and review pharmacy stock.</p>
+          </div>
+
+          <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="Pain Relief">Pain Relief</option>
+            <option value="Antibiotic">Antibiotic</option>
+            <option value="Diabetes">Diabetes</option>
+            <option value="Cold & Flu">Cold & Flu</option>
+          </select>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Medicine</th>
+              <th>Category</th>
+              <th>Batch</th>
+              <th>Stock</th>
+              <th>Expiry</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="medicineTableBody"></tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="medicineModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Add Medicine</h2>
+          <p class="muted">Create a new medicine record.</p>
+        </div>
+        <button id="closeAddMedicine">×</button>
+      </div>
+
+      <form id="medicineForm">
+        <div class="form-grid">
+          <label>
+            Medicine Name
+            <input id="medicineName" type="text" required placeholder="Example: Paracetamol 500mg" />
+          </label>
+
+          <label>
+            Category
+            <select id="medicineCategory" required>
+              <option value="Pain Relief">Pain Relief</option>
+              <option value="Antibiotic">Antibiotic</option>
+              <option value="Diabetes">Diabetes</option>
+              <option value="Cold & Flu">Cold & Flu</option>
+            </select>
+          </label>
+
+          <label>
+            Batch Number
+            <input id="medicineBatch" type="text" required placeholder="Example: B-204" />
+          </label>
+
+          <label>
+            Stock Quantity
+            <input id="medicineStock" type="number" required min="0" placeholder="Example: 120" />
+          </label>
+
+          <label>
+            Expiry Date
+            <input id="medicineExpiry" type="date" required />
+          </label>
+        </div>
+
+        <button class="primary-btn form-submit" type="submit">Save Medicine</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/medicines.js"></script>
+</body>
+</html>
