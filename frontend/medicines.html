@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>MediFlow SaaS | Medicines</title>
+  <title>MediFlow SaaS | Medicines v3</title>
 
   <link rel="stylesheet" href="assets/css/dashboard.css" />
   <link rel="stylesheet" href="assets/css/medicines.css" />
@@ -42,20 +42,36 @@
       <header class="topbar">
         <div>
           <p class="eyebrow">Medicine Control Center</p>
-          <h1>Medicines</h1>
-          <p class="muted">Manage medicine records, stock status, batches, categories, and expiry risk.</p>
+          <h1>Advanced Medicines</h1>
+          <p class="muted">Single medicine entry, barcode search, bulk delivery receiving, supplier tracking, and profit control.</p>
         </div>
 
         <div class="top-actions">
           <div class="search-box">
             <span>🔍</span>
-            <input id="medicineSearch" type="text" placeholder="Search medicine..." />
+            <input id="medicineSearch" type="text" placeholder="Search name, barcode, batch, category..." />
           </div>
 
-          <button class="ghost-btn">Import CSV</button>
-          <button class="primary-btn" id="openAddMedicine">+ Add Medicine</button>
+          <button class="ghost-btn" id="scanFocusBtn">Scan Barcode</button>
+          <button class="ghost-btn" id="openBulkReceiving">Bulk Delivery</button>
+          <button class="primary-btn" id="openAddMedicine">+ Single Add</button>
         </div>
       </header>
+
+      <section class="barcode-panel panel">
+        <div>
+          <h3>Barcode Quick Search</h3>
+          <p class="muted">Scan or type barcode to find existing medicine. If not found, system opens single add form.</p>
+        </div>
+
+        <div class="barcode-input-wrap">
+          <span>▌▌▌</span>
+          <input id="barcodeScannerInput" type="text" placeholder="Scan or type barcode / UPC / DIN / NDC..." />
+          <button class="small-btn" id="barcodeSearchBtn">Search</button>
+        </div>
+
+        <p class="scan-result" id="scanResult">Waiting for scan...</p>
+      </section>
 
       <section class="kpi-grid">
         <div class="kpi-card">
@@ -104,10 +120,6 @@
 
           <select id="categoryFilter">
             <option value="all">All Categories</option>
-            <option value="Pain Relief">Pain Relief</option>
-            <option value="Antibiotic">Antibiotic</option>
-            <option value="Diabetes">Diabetes</option>
-            <option value="Cold & Flu">Cold & Flu</option>
           </select>
         </div>
 
@@ -115,10 +127,17 @@
           <thead>
             <tr>
               <th>Medicine</th>
+              <th>Barcode</th>
               <th>Category</th>
               <th>Batch</th>
               <th>Stock</th>
               <th>Expiry</th>
+              <th>Supplier</th>
+              <th>Agency</th>
+              <th>Company</th>
+              <th>Cost</th>
+              <th>Sell</th>
+              <th>Profit</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -130,12 +149,13 @@
     </main>
   </div>
 
+  <!-- Single Add Modal -->
   <div class="modal-overlay" id="medicineModal">
-    <div class="modal">
+    <div class="modal large-modal">
       <div class="modal-header">
         <div>
-          <h2>Add Medicine</h2>
-          <p class="muted">Create a new medicine record.</p>
+          <h2>Single Add Medicine</h2>
+          <p class="muted">Add one medicine manually or from barcode search.</p>
         </div>
         <button id="closeAddMedicine">×</button>
       </div>
@@ -148,13 +168,18 @@
           </label>
 
           <label>
+            Barcode / UPC / DIN / NDC
+            <input id="medicineBarcode" type="text" placeholder="Example: 062600123456" />
+          </label>
+
+          <label>
             Category
-            <select id="medicineCategory" required>
-              <option value="Pain Relief">Pain Relief</option>
-              <option value="Antibiotic">Antibiotic</option>
-              <option value="Diabetes">Diabetes</option>
-              <option value="Cold & Flu">Cold & Flu</option>
-            </select>
+            <select id="medicineCategory" required></select>
+          </label>
+
+          <label>
+            Add New Category
+            <input id="newCategoryInput" type="text" placeholder="Example: Respiratory" />
           </label>
 
           <label>
@@ -168,13 +193,183 @@
           </label>
 
           <label>
+            Reorder Level
+            <input id="medicineReorderLevel" type="number" required min="0" value="20" />
+          </label>
+
+          <label>
             Expiry Date
             <input id="medicineExpiry" type="date" required />
+          </label>
+
+          <label>
+            Supplier / Medical Rep Name
+            <input id="medicineSupplier" type="text" placeholder="Example: Ahmed Khan" />
+          </label>
+
+          <label>
+            Agency / Distributor Name
+            <input id="medicineAgency" type="text" placeholder="Example: MedSupply Canada" />
+          </label>
+
+          <label>
+            Company / Manufacturer
+            <input id="medicineCompany" type="text" placeholder="Example: Pfizer" />
+          </label>
+
+          <label>
+            Cost Price / Buying Price
+            <input id="medicineCostPrice" type="number" step="0.01" min="0" placeholder="Example: 5.50" />
+          </label>
+
+          <label>
+            Selling Price
+            <input id="medicinePrice" type="number" step="0.01" min="0" placeholder="Example: 12.99" />
           </label>
         </div>
 
         <button class="primary-btn form-submit" type="submit">Save Medicine</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Bulk Delivery Receiving Modal -->
+  <div class="modal-overlay" id="bulkReceivingModal">
+    <div class="modal xlarge-modal">
+      <div class="modal-header">
+        <div>
+          <h2>Bulk Delivery Receiving</h2>
+          <p class="muted">Scan delivery medicines, verify bill, edit mistakes, then confirm all stock together.</p>
+        </div>
+        <button id="closeBulkReceiving">×</button>
+      </div>
+
+      <section class="receiving-header">
+        <label>
+          Invoice / Bill Number
+          <input id="deliveryInvoice" type="text" placeholder="Example: INV-77882" />
+        </label>
+
+        <label>
+          Supplier / Medical Rep Name
+          <input id="deliverySupplier" type="text" placeholder="Example: Ahmed Khan" />
+        </label>
+
+        <label>
+          Agency / Distributor Name
+          <input id="deliveryAgency" type="text" placeholder="Example: HealthLine Distributors" />
+        </label>
+
+        <label>
+          Company / Manufacturer
+          <input id="deliveryCompany" type="text" placeholder="Example: Pfizer / GSK / Sanofi" />
+        </label>
+
+        <label>
+          Delivery Date
+          <input id="deliveryDate" type="date" />
+        </label>
+
+        <label>
+          Notes
+          <input id="deliveryNotes" type="text" placeholder="Optional notes..." />
+        </label>
+      </section>
+
+      <section class="bulk-scan-card">
+        <div class="bulk-scan-row">
+          <label>
+            Scan Barcode
+            <input id="bulkBarcode" type="text" placeholder="Scan barcode and press Enter..." />
+          </label>
+
+          <label>
+            Medicine Name
+            <input id="bulkMedicineName" type="text" placeholder="Auto-filled if existing" />
+          </label>
+
+          <label>
+            Batch
+            <input id="bulkBatch" type="text" placeholder="Batch number" />
+          </label>
+
+          <label>
+            Quantity
+            <input id="bulkQuantity" type="number" min="1" value="1" />
+          </label>
+
+          <label>
+            Expiry
+            <input id="bulkExpiry" type="date" />
+          </label>
+
+          <label>
+            Cost Price
+            <input id="bulkCostPrice" type="number" step="0.01" min="0" placeholder="0.00" />
+          </label>
+
+          <label>
+            Selling Price
+            <input id="bulkSellingPrice" type="number" step="0.01" min="0" placeholder="0.00" />
+          </label>
+        </div>
+
+        <button class="primary-btn form-submit" id="addBulkItem" type="button">Add to Delivery Table</button>
+      </section>
+
+      <section class="bulk-table-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Delivery Verification Table</h3>
+            <p class="muted">Review all scanned medicines before final stock update.</p>
+          </div>
+
+          <button class="ghost-btn" id="clearBulkItems" type="button">Clear Table</button>
+        </div>
+
+        <div class="bulk-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Barcode</th>
+                <th>Medicine</th>
+                <th>Batch</th>
+                <th>Qty</th>
+                <th>Expiry</th>
+                <th>Cost</th>
+                <th>Sell</th>
+                <th>Profit</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="bulkTableBody">
+              <tr>
+                <td colspan="9" class="empty-row">No delivery items added yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bulk-summary">
+          <div>
+            <p class="muted">Total Items</p>
+            <h3 id="bulkTotalItems">0</h3>
+          </div>
+
+          <div>
+            <p class="muted">Total Quantity</p>
+            <h3 id="bulkTotalQuantity">0</h3>
+          </div>
+
+          <div>
+            <p class="muted">Estimated Cost</p>
+            <h3 id="bulkTotalCost">$0.00</h3>
+          </div>
+
+          <button class="primary-btn" id="confirmBulkDelivery" type="button">Confirm Delivery & Update Stock</button>
+        </div>
+      </section>
     </div>
   </div>
 
