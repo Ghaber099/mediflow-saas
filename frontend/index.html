@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MediFlow SaaS | Advanced Dashboard</title>
+
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">+</div>
+        <div>
+          <h2>MediFlow</h2>
+          <p>Pharmacy SaaS</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a class="nav-link active" href="index.html">
+          <span>📊</span>
+          Dashboard
+        </a>
+
+        <a class="nav-link" href="medicines.html">
+          <span>💊</span>
+          Medicines
+        </a>
+
+        <a class="nav-link" href="inventory.html">
+          <span>📦</span>
+          Inventory
+        </a>
+
+        <a class="nav-link" href="sales.html">
+          <span>🧾</span>
+          Sales / POS
+        </a>
+
+        <a class="nav-link" href="prescriptions.html">
+          <span>📄</span>
+          Prescriptions
+        </a>
+
+        <a class="nav-link" href="patients.html">
+          <span>👥</span>
+          Patients
+        </a>
+
+        <a class="nav-link" href="suppliers.html">
+          <span>🚚</span>
+          Suppliers
+        </a>
+
+        <a class="nav-link" href="reports.html">
+          <span>📈</span>
+          Reports
+        </a>
+
+        <a class="nav-link" href="settings.html">
+          <span>⚙️</span>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-card">
+        <p>Current Plan</p>
+        <h3>Pro Pharmacy</h3>
+        <span>14 days trial left</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">MediFlow Command Center</p>
+          <h1>Advanced Pharmacy Dashboard</h1>
+          <p class="muted">Monitor sales, stock, expiry risk, prescriptions, and pharmacy health.</p>
+        </div>
+
+        <div class="top-actions">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search medicines, invoices, patients..." />
+          </div>
+
+          <button class="ghost-btn">Export Report</button>
+          <button class="primary-btn">+ Add Medicine</button>
+        </div>
+      </header>
+
+      <!-- KPI Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <p>Total Sales</p>
+            <span class="pill green">+18%</span>
+          </div>
+          <h2>$12,450</h2>
+          <p class="muted">Compared to last month</p>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <p>Active Medicines</p>
+            <span class="pill blue">Live</span>
+          </div>
+          <h2>1,284</h2>
+          <p class="muted">Across all categories</p>
+        </div>
+
+        <div class="kpi-card warning">
+          <div class="kpi-top">
+            <p>Low Stock</p>
+            <span class="pill orange">Alert</span>
+          </div>
+          <h2>36</h2>
+          <p class="muted">Need reorder soon</p>
+        </div>
+
+        <div class="kpi-card danger">
+          <div class="kpi-top">
+            <p>Expiring Soon</p>
+            <span class="pill red">Risk</span>
+          </div>
+          <h2>19</h2>
+          <p class="muted">Within next 30 days</p>
+        </div>
+      </section>
+
+      <!-- Main Grid -->
+      <section class="dashboard-grid">
+
+        <!-- Sales Chart -->
+        <div class="panel chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Sales Analytics</h3>
+              <p class="muted">Weekly revenue performance</p>
+            </div>
+
+            <select>
+              <option>This Week</option>
+              <option>This Month</option>
+              <option>This Year</option>
+            </select>
+          </div>
+
+          <canvas id="salesChart"></canvas>
+        </div>
+
+        <!-- Pharmacy Health -->
+        <div class="panel health-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Pharmacy Health</h3>
+              <p class="muted">Operational score</p>
+            </div>
+          </div>
+
+          <div class="health-score">
+            <div class="circle-score">
+              <span>86%</span>
+            </div>
+            <p>Good performance. Improve stock reorder timing and expiry control.</p>
+          </div>
+
+          <div class="progress-item">
+            <div>
+              <span>Inventory Accuracy</span>
+              <strong>91%</strong>
+            </div>
+            <div class="progress-bar"><span style="width:91%"></span></div>
+          </div>
+
+          <div class="progress-item">
+            <div>
+              <span>Sales Growth</span>
+              <strong>78%</strong>
+            </div>
+            <div class="progress-bar"><span style="width:78%"></span></div>
+          </div>
+
+          <div class="progress-item">
+            <div>
+              <span>Expiry Safety</span>
+              <strong>69%</strong>
+            </div>
+            <div class="progress-bar"><span style="width:69%"></span></div>
+          </div>
+        </div>
+
+        <!-- Recent Sales -->
+        <div class="panel table-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Recent Sales</h3>
+              <p class="muted">Latest transactions</p>
+            </div>
+
+            <button class="small-btn">View All</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>#INV-1001</td>
+                <td>Walk-in Customer</td>
+                <td>4</td>
+                <td>$84.20</td>
+                <td><span class="status paid">Paid</span></td>
+              </tr>
+
+              <tr>
+                <td>#INV-1002</td>
+                <td>Ali Khan</td>
+                <td>2</td>
+                <td>$42.90</td>
+                <td><span class="status paid">Paid</span></td>
+              </tr>
+
+              <tr>
+                <td>#INV-1003</td>
+                <td>Sarah Wilson</td>
+                <td>6</td>
+                <td>$120.00</td>
+                <td><span class="status pending">Pending</span></td>
+              </tr>
+
+              <tr>
+                <td>#INV-1004</td>
+                <td>Mark Lee</td>
+                <td>1</td>
+                <td>$18.50</td>
+                <td><span class="status paid">Paid</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Smart Alerts -->
+        <div class="panel alerts-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Smart Alerts</h3>
+              <p class="muted">Critical pharmacy warnings</p>
+            </div>
+          </div>
+
+          <div class="alert-card red-alert">
+            <strong>Amoxicillin Batch A-202</strong>
+            <p>Expires in 18 days. Review stock movement.</p>
+          </div>
+
+          <div class="alert-card orange-alert">
+            <strong>Paracetamol 500mg</strong>
+            <p>Stock below minimum reorder level.</p>
+          </div>
+
+          <div class="alert-card blue-alert">
+            <strong>Insulin Cold Chain</strong>
+            <p>Storage temperature check required today.</p>
+          </div>
+
+          <div class="alert-card green-alert">
+            <strong>Daily Backup Complete</strong>
+            <p>System data backup completed successfully.</p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="assets/js/dashboard.js"></script>
+</body>
+</html>
